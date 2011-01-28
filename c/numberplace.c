@@ -1,5 +1,7 @@
+/*
+ * reference: http://mediatips.co.jp/puzzle-9x9.html
+ */
 #include <stdio.h>
-
 int board[9][9] = { 6,0,0,0,0,0,1,0,8,
                     0,7,0,0,0,2,3,0,0,
                     0,0,5,8,0,0,9,0,0,
@@ -84,3 +86,4 @@ int main()
     solve(0);
     return 0;
 }
+
