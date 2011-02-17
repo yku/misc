@@ -41,7 +41,7 @@ set formatoptions+=mM
 
 " tab
 "-----------------------------------------------------------
-set tabstop=8
+set tabstop=4
 set shiftwidth=4
 set softtabstop=4
 set expandtab
@@ -60,12 +60,23 @@ inoremap <C-Tab> <C-V><Tab>
 nnoremap j gj
 nnoremap k gk
 
+" GNU GLOBAL(gtags)
+nmap <C-x> <C-w><C-w><C-w>q
+nmap <C-g> :Gtags -g
+nmap <C-l> :Gtags -f %<CR>
+nmap <C-j> :Gtags <C-r><C-w><CR>
+nmap <C-k> :Gtags -r <C-r><C-w><CR>
+nmap <C-n> :cn<CR>
+nmap <C-p> :cp<CR>
+
+" change mode
+inoremap jj <ESC>
+
 " input time
 inoremap <Leader>date <C-R>=strftime('%A, %B %d, %Y')<CR>
 inoremap <Leader>time <C-R>=strftime('%H:%M')<CR>
 inoremap <Leader>rdate <C-R>=strftime('%A, %B %d, %Y %H:%M')<CR>
 inoremap <Leader>w3cdtf <C-R>=strftime('%Y-%m-%dT%H:%M:%S+09:00')<CR>
-inoremap jj <ESC>
 
 " search
 vnoremap * "zy:let @/ = @z<CR>n
@@ -113,6 +124,9 @@ endfunction
 let g:autodate_format = '%Y-%m-%d'
 let g:autodate_keyword_pre = 'Last Modified:'
 let g:autodate_keyword_post = '$'
+
+" neocomplcache
+let g:neocomplcache_enable_at_startup = 1
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
