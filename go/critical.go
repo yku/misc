@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"flag"
+	"fmt"
+	"sort"
+)
 
 /*
 x ... kill 0.08 cri 0.06
@@ -9,25 +13,65 @@ z ... kill 0.12
 x + y + z = 10
 */
 
+type Data struct {
+	critical    int
+	human       int
+	ex_critical float32
+	buf_rate    float32
+	damage_rate float32
+	crew_x      int
+	crew_y      int
+	crew_z      int
+}
+type Datas []Data
+
+func (d Datas) Len() int {
+	return len(d)
+}
+
+func (d Datas) Swap(i, j int) {
+	d[i], d[j] = d[j], d[i]
+}
+
+func (d Datas) Less(i, j int) bool {
+	return d[i].damage_rate < d[j].damage_rate
+}
+
 func main() {
-	fmt.Println("x := human 8% critical 6% crew.")
-	fmt.Println("y := human 0% critical 9% crew.")
-	fmt.Println("z := human 12% critical 0% crew.")
-	for x := 0; x <= 10; x++ {
-		for y := 0; y <= 10-x; y++ {
-			for z := 0; z <= 10-(x+y); z++ {
-				//cri := 0.06*x + 0.09*y + 0.0*z
+	crews := flag.Int("n", 10, "max crews")
+	flag.Parse()
+
+	fmt.Println("crew_x = human killer  8% critical 6% .")
+	fmt.Println("crew_y = human killer  0% critical 9% .")
+	fmt.Println("crew_z = human killer 12% critical 0% .")
+	d := Datas{}
+	for x := 0; x <= *crews; x++ {
+		for y := 0; y <= *crews-x; y++ {
+			for z := 0; z <= *crews-(x+y); z++ {
 				cri := 6*x + 9*y + 0*z
 				exp := float32(1*(100-cri)+3*cri) / 100.0
 				human := 8*x + 0*y + 12*z
 				buf := float32(human+100) / 100.0
 				delta := buf * exp
-				//fmt.Printf("cri=%d%% exp_cri=%f buf=%f rate=%f rate*0.5=%f rate*1.5=%f (x=%d y=%d z=%d)\n", cri, exp, buf, delta, delta*0.5, delta*1.5, x, y, z)
-				if x+y+z == 10 {
-					fmt.Printf("%d [cri=%02d%% human=%03d%%] expected_cri=%.2f buf=%.2f rate=%.2f rate*0.5=%.2f rate*1.5=%.2f (x=%d y=%d z=%d)\n", cri, cri, human, exp, buf, delta, delta*0.5, delta*1.5, x, y, z)
+				if x+y+z == *crews {
+					t := Data{}
+					t.critical = cri
+					t.human = human
+					t.ex_critical = exp
+					t.buf_rate = buf
+					t.damage_rate = delta
+					t.crew_x = x
+					t.crew_y = y
+					t.crew_z = z
+					d = append(d, t)
 				}
 			}
 		}
 	}
-
+	sort.Sort(d)
+	fmt.Printf("cri\tkill\te_cri\tbuf\tdmg\tcrew_x\tcrew_y\tcrew_z\twarrior\tspear\n")
+	for i := range d {
+		//fmt.Println(d[idx])
+		fmt.Printf("%2d%%\t%3d%%\t%.3f\t%.3f\t%.3f\t%6d\t%6d\t%6d\t%.3f\t%.3f\n", d[i].critical, d[i].human, d[i].ex_critical, d[i].buf_rate, d[i].damage_rate, d[i].crew_x, d[i].crew_y, d[i].crew_z, d[i].damage_rate*1.7, d[i].damage_rate*1.7*1.7)
+	}
 }
