@@ -69,9 +69,26 @@ func main() {
 		}
 	}
 	sort.Sort(d)
-	fmt.Printf("cri\tkill\te_cri\tbuf\tdmg\tcrew_x\tcrew_y\tcrew_z\twarrior\tspear\n")
+	fmt.Printf("cri kill e_cri buf dmg(normal) dmg(good) dmg(bad) crew_x crew_y crew_z\n")
 	for i := range d {
-		//fmt.Println(d[idx])
-		fmt.Printf("%2d%%\t%3d%%\t%.3f\t%.3f\t%.3f\t%6d\t%6d\t%6d\t%.3f\t%.3f\n", d[i].critical, d[i].human, d[i].ex_critical, d[i].buf_rate, d[i].damage_rate, d[i].crew_x, d[i].crew_y, d[i].crew_z, d[i].damage_rate*1.7, d[i].damage_rate*1.7*1.7)
+		color_good := d[i].buf_rate * 1.5
+		if color_good >= 3.0 {
+			color_good = 3.0
+		}
+		color_normal := d[i].buf_rate
+		if color_normal >= 3.0 {
+			color_normal = 3.0
+		}
+		color_bad := d[i].buf_rate * 0.5
+		if color_bad >= 3.0 {
+			color_bad = 3.0
+		}
+
+		fmt.Printf("%2d%% %3d%% %.3f %.3f %.3f %.3f %.3f %6d %6d %6d\n",
+			d[i].critical, d[i].human, d[i].ex_critical, d[i].buf_rate,
+			d[i].ex_critical*color_normal,
+			d[i].ex_critical*color_good,
+			d[i].ex_critical*color_bad,
+			d[i].crew_x, d[i].crew_y, d[i].crew_z)
 	}
 }
