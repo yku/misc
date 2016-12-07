@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	skill_time := flag.Int("t", 10, "skill charge time")
+	skill_time := flag.Float64("t", 10, "skill charge time")
 	flag.Parse()
 
 	for reload := 1.0; reload <= 2.0; reload += 0.03 {
